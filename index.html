@@ -1,12 +1,17 @@
 <html>
 <head>
 
-  <script src="bundle.js"></script>
+  <script src="browser/bundle.js"></script>
   <script>
     var app = require("./index");
     var $ = app.$;
     var _ = app._;
     var Backbone = app.Backbone;
+
+    var Movies = Backbone.Firebase.Collection.extend({
+      firebase: "https://movies-demo.firebaseio.com"
+    });
+    var movies = new Movies();
   </script>
 
 </head>
