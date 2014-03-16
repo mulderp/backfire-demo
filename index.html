@@ -1,5 +1,28 @@
 <html>
 <head>
+  <meta charset="utf-8" />
+
+  <style>
+    a {
+      font-size: 11px;
+      color: #3737f7;
+      padding-left: 4px;
+    }
+
+    aside {
+      position: absolute;
+      top: 0; bottom: 0; width: 250px;
+      padding-top: 20px;
+      padding-left: 10px;
+      background-color: #f7f7f7;
+    }
+
+    .container {
+       position: relative;
+       width: 550px;
+       margin: 40px 0 50px 260px;
+    }
+  </style>
 
   <script src="browser/bundle.js"></script>
   <script>
@@ -13,11 +36,29 @@
     });
     var moviesCollection = new Movies();
 
+    var MoviesRouter = Backbone.Router.extend({
+      routes: {
+        "movies/:id": "showMovie",
+        "": "showAll",
+      },
+
+      showAll: function() {
+        var movies = new MoviesView({collection: moviesCollection});
+        movies.render();
+      },
+
+      showMovie: function(id) {
+        var movie = moviesCollection.get(id);
+        console.log(movie);
+      }
+
+    });
+
     var MoviesView = Backbone.View.extend({
       el: "#movies",
       render: function() {
         var movies = this.collection.map(function(movie) {
-          return "<li>" + movie.get('title') + "</li>";
+          return "<li>" + movie.get('title') + "<a href='#movies/" + movie.id + "'>Show</a></li>";
         });
         this.$el.html(movies);
         return this;
@@ -29,8 +70,8 @@
     });
 
     $().ready(function() {
-      var movies = new MoviesView({collection: moviesCollection});
-      movies.render();
+      var router = new MoviesRouter();
+      Backbone.history.start();
     });
   </script>
 
@@ -38,10 +79,18 @@
 
 <body>
 
-<h2>Firebase demo</h2>
-
+<aside>
 <ul id="movies">
 </ul>
+</aside>
+
+<div class="container">
+  <h2>Firebase demo <a href="#">All movies</a> </h2>
+  
+  
+  <div id="details">
+  </div>
+</div>
 
 
 </body>
