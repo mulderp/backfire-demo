@@ -26,30 +26,11 @@
 
   <script src="static/bundle.js"></script>
   <script>
-    var app = require("app");
+    var app = require('app');
     var $ = app.$;
 
-    var MoviesRouter = app.Backbone.Router.extend({
-      routes: {
-        "movies/:id": "showMovie",
-        "": "showAll",
-      },
-
-      showAll: function() {
-        var movies = new app.views.Movies({collection: app.collections.movies});
-        movies.render();
-      },
-
-      showMovie: function(id) {
-        var movie = app.collections.movies.get(id);
-        var movieView = new app.views.Movie({el: "#details", model: movie});
-        movieView.render();
-      }
-
-    });
-
     $().ready(function() {
-      var router = new MoviesRouter();
+      var router = new app.Router();
       app.Backbone.history.start();
     });
   </script>
