@@ -17,13 +17,13 @@ var MoviesRouter = Backbone.Router.extend({
   },
 
   showAll: function() {
-    var movies = new app.views.Movies({collection: app.collections.movies});
+    var movies = new MoviesView({collection: moviesCollection});
     movies.render();
   },
 
   showMovie: function(id) {
-    var movie = app.collections.movies.get(id);
-    var movieView = new app.views.Movie({el: "#details", model: movie});
+    var movie = moviesCollection.get(id);
+    var movieView = new MovieView({el: "#details", model: movie});
     movieView.render();
   }
 
