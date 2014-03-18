@@ -24,54 +24,33 @@
     }
   </style>
 
-  <script src="browser/bundle.js"></script>
+  <script src="static/bundle.js"></script>
   <script>
-    var app = require("./index");
+    var app = require("app");
     var $ = app.$;
-    var _ = app._;
-    var Backbone = app.Backbone;
 
-    var Movies = Backbone.Firebase.Collection.extend({
-      firebase: "https://movies-demo.firebaseio.com/movies"
-    });
-    var moviesCollection = new Movies();
-
-    var MoviesRouter = Backbone.Router.extend({
+    var MoviesRouter = app.Backbone.Router.extend({
       routes: {
         "movies/:id": "showMovie",
         "": "showAll",
       },
 
       showAll: function() {
-        var movies = new MoviesView({collection: moviesCollection});
+        var movies = new app.views.Movies({collection: app.collections.movies});
         movies.render();
       },
 
       showMovie: function(id) {
-        var movie = moviesCollection.get(id);
-        console.log(movie);
+        var movie = app.collections.movies.get(id);
+        var movieView = new app.views.Movie({el: "#details", model: movie});
+        movieView.render();
       }
 
-    });
-
-    var MoviesView = Backbone.View.extend({
-      el: "#movies",
-      render: function() {
-        var movies = this.collection.map(function(movie) {
-          return "<li>" + movie.get('title') + "<a href='#movies/" + movie.id + "'>Show</a></li>";
-        });
-        this.$el.html(movies);
-        return this;
-      },
-      initialize: function() {
-        this.listenTo(this.collection, 'add', this.render);
-        this.listenTo(this.collection, 'all', function(ev) { console.log(ev) });
-      }
     });
 
     $().ready(function() {
       var router = new MoviesRouter();
-      Backbone.history.start();
+      app.Backbone.history.start();
     });
   </script>
 

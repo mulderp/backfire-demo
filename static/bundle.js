@@ -1,4 +1,41 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"azHLCm":[function(require,module,exports){
+var $             = require('jquery-untouched');
+var _             = require('underscore');
+var Backbone      = require('backbone');
+Backbone.$        = $;
+
+var Movies = require('collections/movies');
+var moviesCollection = new Movies();
+
+var MovieView = require('views/movieView');
+var MoviesView = require('views/moviesView');
+
+
+module.exports = {
+    $: $,
+    _: _,
+    Backbone: Backbone,
+    collections: {
+      movies: moviesCollection
+    },
+    views: {
+      Movie: MovieView,
+      Movies: MoviesView
+    }
+};
+
+},{"backbone":7,"collections/movies":3,"jquery-untouched":9,"underscore":10,"views/movieView":5,"views/moviesView":6}],"app":[function(require,module,exports){
+module.exports=require('azHLCm');
+},{}],3:[function(require,module,exports){
+var Backbone      = require('backbone');
+Backbone.Firebase = require('libs/backfire');
+
+var Movies = Backbone.Firebase.Collection.extend({
+  firebase: "https://movies-demo.firebaseio.com/movies"
+});
+module.exports = Movies
+
+},{"backbone":7,"libs/backfire":4}],4:[function(require,module,exports){
 /**
  * Backbone Firebase Adapter.
  */
@@ -385,23 +422,44 @@ Backbone.Firebase.Model = Backbone.Model.extend({
 module.exports = Backbone.Firebase;
 })();
 
-},{"backbone":4,"client-firebase":5,"underscore":7}],"Awhy3j":[function(require,module,exports){
-var $             = require('jquery-untouched');
-var _             = require('underscore');
-var Backbone      = require('backbone');
-var Firebase      = require('client-firebase');
-Backbone.Firebase = require('./backfire.js');
-Backbone.$        = $;
+},{"backbone":7,"client-firebase":8,"underscore":10}],5:[function(require,module,exports){
+var _ = require('underscore');
+var Backbone = require("backbone");
+var MovieView = Backbone.View.extend({
+  template: _.template("\
+      <h2><%= this.model.get('title') %></h2><hr/>\
+      year: <%= this.model.get('year') %><br>\
+      description: <%= this.model.get('description') %><br>\
+  "),
+  render: function() {
+    this.$el.html(this.template(this));
+    return this;
+  }
+});
 
-module.exports = {
-    $: $,
-    _: _,
-    Backbone: Backbone
-};
+module.exports = MovieView;
 
-},{"./backfire.js":1,"backbone":4,"client-firebase":5,"jquery-untouched":6,"underscore":7}],"./index":[function(require,module,exports){
-module.exports=require('Awhy3j');
-},{}],4:[function(require,module,exports){
+},{"backbone":7,"underscore":10}],6:[function(require,module,exports){
+var Backbone = require('backbone');
+
+var MoviesView = Backbone.View.extend({
+  el: "#movies",
+  render: function() {
+    var movies = this.collection.map(function(movie) {
+      return "<li>" + movie.get('title') + "<a href='#movies/" + movie.id + "'>Show</a></li>";
+    });
+    this.$el.html(movies);
+    return this;
+  },
+  initialize: function() {
+    this.listenTo(this.collection, 'add', this.render);
+    this.listenTo(this.collection, 'all', function(ev) { console.log(ev) });
+  }
+});
+module.exports = MoviesView
+
+
+},{"backbone":7}],7:[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -2011,7 +2069,7 @@ module.exports=require('Awhy3j');
 
 }));
 
-},{"underscore":7}],5:[function(require,module,exports){
+},{"underscore":10}],8:[function(require,module,exports){
 (function() {function g(a){throw a;}var j=void 0,k=!0,l=null,o=!1;function aa(a){return function(){return this[a]}}function r(a){return function(){return a}}var t,ba=this;function ca(){}function da(a){a.yc=function(){return a.dd?a.dd:a.dd=new a}}
 function ea(a){var b=typeof a;if("object"==b)if(a){if(a instanceof Array)return"array";if(a instanceof Object)return b;var c=Object.prototype.toString.call(a);if("[object Window]"==c)return"object";if("[object Array]"==c||"number"==typeof a.length&&"undefined"!=typeof a.splice&&"undefined"!=typeof a.propertyIsEnumerable&&!a.propertyIsEnumerable("splice"))return"array";if("[object Function]"==c||"undefined"!=typeof a.call&&"undefined"!=typeof a.propertyIsEnumerable&&!a.propertyIsEnumerable("call"))return"function"}else return"null";
 else if("function"==b&&"undefined"==typeof a.call)return"object";return b}function u(a){return a!==j}function fa(a){var b=ea(a);return"array"==b||"object"==b&&"number"==typeof a.length}function v(a){return"string"==typeof a}function ga(a){return"number"==typeof a}function ha(a){var b=typeof a;return"object"==b&&a!=l||"function"==b}Math.floor(2147483648*Math.random()).toString(36);function ia(a,b,c){return a.call.apply(a.bind,arguments)}
@@ -2157,7 +2215,7 @@ J.prototype.setOnDisconnect=J.prototype.Qd;J.prototype.hb=function(a,b,c){A("Fir
 function Nb(a,b){z(!b||a===k||a===o,"Can't turn on custom loggers persistently.");a===k?("undefined"!==typeof console&&("function"===typeof console.log?Lb=w(console.log,console):"object"===typeof console.log&&(Lb=function(a){console.log(a)})),b&&ob.setItem("logging_enabled","true")):a?Lb=a:(Lb=l,ob.removeItem("logging_enabled"))}J.enableLogging=Nb;J.ServerValue={TIMESTAMP:{".sv":"timestamp"}};J.INTERNAL=Z;J.Context=ke;})();
 module.exports = Firebase;
 
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.10.2
  * http://jquery.com/
@@ -11948,7 +12006,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 })( window );
 
-},{}],7:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 //     Underscore.js 1.6.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
